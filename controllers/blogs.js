@@ -20,6 +20,20 @@ blogsRouter.get('/', (request, response) => {
     })
 })
 
+blogsRouter.post('/', (request,response) => {
+  const blog = new Blog(request.body)
+
+  //not sure if return value should be formatted
+  blog
+    .save()
+    .then(result => {
+      return formatBlog(result)
+    })
+    .then(result => {
+      response.status(201).json(result)
+    })
+})
+
 
 
 
