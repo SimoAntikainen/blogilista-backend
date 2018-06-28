@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const middleware = require('./utils/middleware')
+// const blogRouter = require('./controllers/blogs')
 
 const Blog = mongoose.model('Blog', {
   title: String,
@@ -23,7 +24,15 @@ if ( process.env.NODE_ENV !== 'production' ) {
 }
 
 const mongoUrl = process.env.MONGODB_URI
-mongoose.connect(mongoUrl)
+// mongoose.connect(mongoUrl)
+mongoose
+  .connect(mongoUrl)
+  .then( () => {
+    console.log('connected to database', mongoUrl)
+  })
+  .catch( err => {
+    console.log(err)
+  })
 
 app.use(middleware.logger)
 
@@ -44,6 +53,8 @@ app.post('/api/blogs', (request, response) => {
       response.status(201).json(result)
     })
 })
+
+// app.use('/api/blogs', blogsRouter)
 
 app.use(middleware.error)
 
