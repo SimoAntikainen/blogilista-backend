@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "watch": "nodemon index.js",
+    "lint": "eslint .",
     "test": "jest --verbose"
   },
   "author": "Simo Antikainen",
@@ -17,6 +18,7 @@
     "mongoose": "^5.1.7"
   },
   "devDependencies": {
+    "eslint": "^5.0.1",
     "jest": "^23.2.0",
     "nodemon": "^1.17.5"
   }
