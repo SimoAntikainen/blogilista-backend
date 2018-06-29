@@ -10,7 +10,28 @@ const totalLikes = (blogs) => {
 
 }
 
+const favouriteBlog = (blogs) => {
+  const reducer = (fav, blog) => {
+    return fav.likes > blog.likes ? fav : blog  
+  } 
+  return blogs.reduce(reducer)
+
+}
+
+const mostBlogs = (blogs) => {
+  const authors = blogs.map(blog => blog.author)
+  // console.log('Authors', authors)
+  const dictionary = {}
+  authors.forEach(author => {dictionary[author] === undefined ? dictionary[author] = 1 : dictionary[author] = dictionary[author] + 1})
+  // console.log('Authors dict', dictionary)
+  const largestAuthor = Object.keys(dictionary).reduce((a, b) => dictionary[a] > dictionary[b] ? a : b)
+  return {author : largestAuthor, blogs : dictionary[largestAuthor]} 
+}
+
+
 module.exports = {
   dummy,
-  totalLikes
+  totalLikes,
+  favouriteBlog,
+  mostBlogs
 }

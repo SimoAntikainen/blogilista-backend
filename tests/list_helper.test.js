@@ -1,5 +1,7 @@
 const listHelper = require('../utils/list_helper')
 
+
+
 test('dummy is called', () => {
   const blogs = []
 
@@ -91,5 +93,126 @@ describe('total likes', () => {
   })
 
 
+
+})
+
+
+describe('most favourited', () => {
+
+  const listWithOneBlog = [
+    {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 5
+    }
+  ]
+
+  const listWithManyBlogs = [
+    {
+      title: 'React patterns',
+      author: 'Michael Chan',
+      likes: 1
+    },
+    {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 3
+    },
+    {
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      likes: 1
+    },
+    {
+      title: 'First class tests',
+      author: 'Robert C. Martin',
+      likes: 4
+    },
+    {
+      title: 'TDD harms architecture',
+      author: 'Robert C. Martin',
+      likes: 4
+    },
+    {
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      likes: 3
+    }  
+  ]
+
+  test('when list has only one blog equals the likes of that', () => {
+    const result = listHelper.favouriteBlog(listWithOneBlog)
+    expect(result).toEqual(listWithOneBlog[0])
+  })
+
+  test('when list has many blogs most favourited is the last blog with the most votes', () => {
+    const result = listHelper.favouriteBlog(listWithManyBlogs)
+    expect(result).toEqual(listWithManyBlogs[4])
+  })
+
+})
+
+describe('most blogs', () => {
+
+  const listWithOneBlog = [
+    {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 5
+    }
+  ]
+
+  const listWithManyBlogs = [
+    {
+      title: 'React patterns',
+      author: 'Michael Chan',
+      likes: 1
+    },
+    {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 3
+    },
+    {
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      likes: 1
+    },
+    {
+      title: 'First class tests',
+      author: 'Robert C. Martin',
+      likes: 4
+    },
+    {
+      title: 'TDD harms architecture',
+      author: 'Robert C. Martin',
+      likes: 4
+    },
+    {
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      likes: 3
+    }  
+  ]
+
+  const mostFirstCase = {
+    author: 'Edsger W. Dijkstra',
+    blogs: 1
+  }
+
+  const mostSecondCase = {
+    author: 'Robert C. Martin',
+    blogs: 3
+  }
+
+  test('when list has only one blog equals the likes of that', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual(mostFirstCase)
+  })
+
+  test('when list has many blogs most favourited is the last blog with the most votes', () => {
+    const result = listHelper.mostBlogs(listWithManyBlogs)
+    expect(result).toEqual(mostSecondCase)
+  })
 
 })
