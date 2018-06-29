@@ -152,7 +152,7 @@ describe('most favourited', () => {
 
 })
 
-describe('most blogs', () => {
+describe('most blogs by author', () => {
 
   const listWithOneBlog = [
     {
@@ -195,24 +195,90 @@ describe('most blogs', () => {
     }  
   ]
 
-  const mostFirstCase = {
+  const mostBlogsFirstCase = {
     author: 'Edsger W. Dijkstra',
     blogs: 1
   }
 
-  const mostSecondCase = {
+  const mostBlogsSecondCase = {
     author: 'Robert C. Martin',
     blogs: 3
   }
 
-  test('when list has only one blog equals the likes of that', () => {
+  test('when list has only one blog it is most popular', () => {
     const result = listHelper.mostBlogs(listWithOneBlog)
-    expect(result).toEqual(mostFirstCase)
+    expect(result).toEqual(mostBlogsFirstCase)
   })
 
-  test('when list has many blogs most favourited is the last blog with the most votes', () => {
+  test('when list has many blogs most blogs having authors is the author with the most blogs', () => {
     const result = listHelper.mostBlogs(listWithManyBlogs)
-    expect(result).toEqual(mostSecondCase)
+    expect(result).toEqual(mostBlogsSecondCase)
+  })
+
+})
+
+
+describe('most liked author', () => {
+
+  const listWithOneBlog = [
+    {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 5
+    }
+  ]
+
+  const listWithManyBlogs = [
+    {
+      title: 'React patterns',
+      author: 'Michael Chan',
+      likes: 1
+    },
+    {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 3
+    },
+    {
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      likes: 1
+    },
+    {
+      title: 'First class tests',
+      author: 'Robert C. Martin',
+      likes: 4
+    },
+    {
+      title: 'TDD harms architecture',
+      author: 'Robert C. Martin',
+      likes: 4
+    },
+    {
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      likes: 3
+    }  
+  ]
+
+  const mostLikesFirstCase = {
+    author: 'Edsger W. Dijkstra',
+    likes: 5
+  }
+
+  const mostLikesSecondCase = {
+    author: 'Robert C. Martin',
+    likes: 11
+  }
+
+  test('when list has only author he is the most popular', () => {
+    const result = listHelper.mostLikes(listWithOneBlog)
+    expect(result).toEqual(mostLikesFirstCase)
+  })
+
+  test('when list has many blogs most liked authors is the author with the most blogs', () => {
+    const result = listHelper.mostLikes(listWithManyBlogs)
+    expect(result).toEqual(mostLikesSecondCase)
   })
 
 })
