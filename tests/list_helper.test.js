@@ -350,15 +350,45 @@ describe('blogilista tests', () => {
       expect(contents).toContain(testBlogs[2].title)
 
     })
+  })
 
-    afterAll(() => {
-      server.close()
+  describe('blogilista api/blogs POST tests', () => {
+    beforeAll(async () => {
+      await Blog.remove({})
+    
+      const blogObjects = testBlogs.map(blog => new Blog(blog))
+      const promiseArray = blogObjects.map(blog => blog.save())
+      await Promise.all(promiseArray)
     })
 
-
+    test('a valid blog can be added ', async () => {
+      const newBlog = {
+        title: 'To Serve Man, with Software',
+        author: 'Jeff Atwood.',
+        url: 'https://blog.codinghorror.com/to-serve-man-with-software/',
+        likes: 7
+      }
+    
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    
+      const response = await api
+        .get('/api/blogs')
+    
+      const contents = response.body.map(r => r.title)
+    
+      expect(response.body.length).toBe(testBlogs.length + 1)
+      expect(contents).toContain('To Serve Man, with Software')
+    })
 
   })
 
+  afterAll(() => {
+    server.close()
+  })
 
 
 })
