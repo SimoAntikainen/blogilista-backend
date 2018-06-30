@@ -11,14 +11,18 @@ const formatBlog = (blog) => {
   }
 }
 
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({})
+  response.json(blogs.map(formatBlog))
+})
 
-blogsRouter.get('/', (request, response) => {
+/**blogsRouter.get('/', (request, response) => {
   Blog
     .find({})
     .then(blogs => {
       response.json(blogs.map(formatBlog))
     })
-})
+})**/
 
 blogsRouter.post('/', (request,response) => {
   const blog = new Blog(request.body)
