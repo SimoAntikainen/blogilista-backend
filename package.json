@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "watch": "nodemon index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "watch": "cross-env NODE_ENV=development nodemon index.js",
     "lint": "eslint .",
-    "test": "jest --verbose"
+    "test": "cross-env NODE_ENV=test jest --verbose"
   },
   "author": "Simo Antikainen",
   "license": "MIT",
@@ -18,8 +18,10 @@
     "mongoose": "^5.1.7"
   },
   "devDependencies": {
+    "cross-env": "^5.2.0",
     "eslint": "^5.0.1",
     "jest": "^23.2.0",
-    "nodemon": "^1.17.5"
+    "nodemon": "^1.17.5",
+    "supertest": "^3.1.0"
   }
 }
