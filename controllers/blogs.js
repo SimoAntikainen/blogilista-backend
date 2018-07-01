@@ -16,6 +16,22 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs.map(formatBlog))
 })
 
+blogsRouter.post('/', async (request,response) => {
+  try {
+    const body = request.body
+
+    const blog = new Blog(body)
+
+    const savedBlog = await blog.save()
+    const formattedBlog = formatBlog(savedBlog)
+    response.status(201).json(formattedBlog)
+
+
+  } catch (exception) {
+    console.log(exception)
+  }
+})
+
 /**blogsRouter.get('/', (request, response) => {
   Blog
     .find({})
@@ -24,7 +40,7 @@ blogsRouter.get('/', async (request, response) => {
     })
 })**/
 
-blogsRouter.post('/', (request,response) => {
+/**blogsRouter.post('/', (request,response) => {
   const blog = new Blog(request.body)
 
   //not sure if return value should be formatted
@@ -36,7 +52,7 @@ blogsRouter.post('/', (request,response) => {
     .then(result => {
       response.status(201).json(result)
     })
-})
+})**/
 
 
 
