@@ -315,7 +315,7 @@ const testBlogs = [
 
 //test for parts 4.8-4.11
 describe('blogilista tests', () => {
-
+  //part 4.8
   describe('blogilista api/blogs GET tests', () => {
     beforeAll(async () => {
       await Blog.remove({})
@@ -352,6 +352,8 @@ describe('blogilista tests', () => {
     })
   })
 
+  //part 4.9
+
   describe('blogilista api/blogs POST tests', () => {
     beforeAll(async () => {
       await Blog.remove({})
@@ -378,11 +380,57 @@ describe('blogilista tests', () => {
       const response = await api
         .get('/api/blogs')
     
-      const contents = response.body.map(r => r.title)
+      const titles = response.body.map(r => r.title)
     
       expect(response.body.length).toBe(testBlogs.length + 1)
-      expect(contents).toContain('To Serve Man, with Software')
+      expect(titles).toContain('To Serve Man, with Software')
     })
+    //part 4.10
+    test('a blog with no likes can be added ', async () => {
+      const newBlog = {
+        title: 'No added likes blog',
+        author: 'Jeff Atwood.',
+        url: 'https://blog.codinghorror.com/success-through-failure/',
+      }
+    
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    
+      const response = await api
+        .get('/api/blogs')
+    
+      const titles = response.body.map(r => r.title)
+      const likes = response.body.map(r => r.likes)
+    
+      expect(response.body.length).toBe(testBlogs.length + 2)
+      expect(titles).toContain('No added likes blog')
+      expect(likes).toContain(0)
+    })
+
+    //part 4.11
+    test('a blog with no url and title cannot be added ', async () => {
+      const newBlog = {
+        author: 'Author no url and title'
+      }
+    
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+    
+      const response = await api
+        .get('/api/blogs')
+    
+      const authors = response.body.map(r => r.author)
+    
+      expect(response.body.length).toBe(testBlogs.length + 2)
+      expect(authors).not.toContain('Author no url and title')
+    })
+
 
   })
 

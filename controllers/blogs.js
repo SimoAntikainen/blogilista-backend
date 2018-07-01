@@ -20,6 +20,13 @@ blogsRouter.post('/', async (request,response) => {
   try {
     const body = request.body
 
+    if(body.title === undefined && body.url === undefined) {
+      return response.status(400).json({ error: 'author and url missing' })    
+    }
+    if(body.likes === undefined) {
+      body['likes'] = 0
+    }
+
     const blog = new Blog(body)
 
     const savedBlog = await blog.save()
@@ -53,18 +60,5 @@ blogsRouter.post('/', async (request,response) => {
       response.status(201).json(result)
     })
 })**/
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = blogsRouter
