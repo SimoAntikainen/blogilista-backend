@@ -1,0 +1,10 @@
+PUT http://localhost:3001/api/blogs/5b3553a00bbec20a38abcc84
+Content-Type: application/json
+
+{
+  "id" : "5b3553a00bbec20a38abcc84",
+  "title" : "ABCD blog",
+  "author" : "best blogger",
+  "url" : "https://medium.com/",
+  "likes" : 1234
+}

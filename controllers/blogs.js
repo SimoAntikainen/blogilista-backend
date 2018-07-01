@@ -36,8 +36,54 @@ blogsRouter.post('/', async (request,response) => {
 
   } catch (exception) {
     console.log(exception)
+    response.status(500).json({ error: 'Internal error' })
   }
 })
+
+blogsRouter.delete('/:id', async (request, response) => {
+  try {
+    await Blog.findByIdAndRemove(request.params.id)
+    response.status(204).end()
+
+  } catch (exception) {
+    console.log(exception)
+    response.status(400).send({ error: 'malformatted id' })
+  }
+})
+
+blogsRouter.put('/:id', async (request, response) => {
+  const body = request.body
+
+  const blog = {
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes
+  }
+
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+    response.json(formatBlog(updatedBlog))
+
+  } catch(exception) {
+    console.log(exception)
+    response.status(400).send({ error: 'malformatted id' })  
+  }
+
+})
+
+module.exports = blogsRouter
+
+/**Blog
+    .findByIdAndUpdate(request.params.id, blog, { new: true })
+    .then(updatedBlog => {
+      response.json(formatBlog(updatedBlog))
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })**/
+
 
 /**blogsRouter.get('/', (request, response) => {
   Blog
@@ -60,5 +106,3 @@ blogsRouter.post('/', async (request,response) => {
       response.status(201).json(result)
     })
 })**/
-
-module.exports = blogsRouter
