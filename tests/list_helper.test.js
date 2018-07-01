@@ -3,7 +3,7 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Blog = require('../models/blog')
-const {testBlogs, blogsInDb, initializeDb} = require('./test_helper')
+const {testBlogs, blogsInDb, initializeDb,postNoteToDb} = require('./test_helper')
 
 
 //tests for 4.3-4.7
@@ -334,18 +334,14 @@ describe('blogilista tests', () => {
     })
 
     test('a valid blog can be added ', async () => {
-      const newBlog = {
+      const newBlog1 = {
         title: 'To Serve Man, with Software',
         author: 'Jeff Atwood.',
         url: 'https://blog.codinghorror.com/to-serve-man-with-software/',
         likes: 7
       }
-    
-      await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+
+      await postNoteToDb(api,newBlog1,201,/application\/json/)
     
       const dbStateAfter = await blogsInDb()
     
@@ -357,17 +353,13 @@ describe('blogilista tests', () => {
 
     //part 4.10
     test('a blog with no likes can be added ', async () => {
-      const newBlog = {
+      const newBlog2 = {
         title: 'No added likes blog',
         author: 'Jeff Atwood.',
         url: 'https://blog.codinghorror.com/success-through-failure/',
       }
     
-      await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+      await postNoteToDb(api,newBlog2,201,/application\/json/)
     
       const dbStateAfter = await blogsInDb()
     
@@ -381,16 +373,12 @@ describe('blogilista tests', () => {
 
     //part 4.11
     test('a blog with no url and title cannot be added ', async () => {
-      const newBlog = {
+      const newBlog3 = {
         author: 'Author no url and title'
       }
-    
-      await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-    
+
+      await postNoteToDb(api,newBlog3,400,/application\/json/)
+      
       const dbStateAfter = await blogsInDb()
     
       const authors = dbStateAfter.map(r => r.author)

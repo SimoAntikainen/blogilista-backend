@@ -33,6 +33,16 @@ const initializeDb = async () => {
   await Promise.all(promiseArray)
 }
 
+const postNoteToDb = async (api, newBlog, statusCode, resType) => {
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(statusCode)
+    .expect('Content-Type', resType)
+}
+
+
+
 module.exports = {
-  testBlogs,blogsInDb,initializeDb
+  testBlogs,blogsInDb,initializeDb,postNoteToDb
 }
