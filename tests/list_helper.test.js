@@ -3,6 +3,7 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const {testBlogs, blogsInDb, initializeDb} = require('./test_helper')
 
 
 //tests for 4.3-4.7
@@ -291,38 +292,13 @@ describe.skip('list helpers', () => {
 
 })
 
-const testBlogs = [
-  {
-    title: 'Go To Statement Considered Harmful',
-    author: 'Edsger W. Dijkstra',
-    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-    likes: 5
-  },
-  {
-    title: 'React patterns',
-    author: 'Michael Chan',
-    url: 'https://reactpatterns.com/',
-    likes: 7
-  },
-  {
-    title: 'Type wars',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
-    likes: 2
-  }
-]
-
 
 //test for parts 4.8-4.11
 describe('blogilista tests', () => {
   //part 4.8
   describe('blogilista api/blogs GET tests', () => {
     beforeAll(async () => {
-      await Blog.remove({})
-    
-      const blogObjects = testBlogs.map(blog => new Blog(blog))
-      const promiseArray = blogObjects.map(blog => blog.save())
-      await Promise.all(promiseArray)
+      await initializeDb()
     })
 
     test('blogs are returned as json', async () => {
@@ -333,18 +309,16 @@ describe('blogilista tests', () => {
     })
 
     test('all blogs are returned', async () => {
-      const response = await api
-        .get('/api/blogs')
+      const dbState = await blogsInDb()
     
-      expect(response.body.length).toBe(testBlogs.length)
+      expect(dbState.length).toBe(testBlogs.length)
     })
 
     test('first and last blog contained in list', async () => {
-      const response = await api
-        .get('/api/blogs')
+      const dbState = await blogsInDb()
 
       //console.log('res body', response.body)
-      const contents = response.body.map(r => r.title)  
+      const contents = dbState.map(r => r.title)  
     
       expect(contents).toContain(testBlogs[0].title)
       expect(contents).toContain(testBlogs[2].title)
@@ -356,11 +330,7 @@ describe('blogilista tests', () => {
 
   describe('blogilista api/blogs POST tests', () => {
     beforeAll(async () => {
-      await Blog.remove({})
-    
-      const blogObjects = testBlogs.map(blog => new Blog(blog))
-      const promiseArray = blogObjects.map(blog => blog.save())
-      await Promise.all(promiseArray)
+      await initializeDb()
     })
 
     test('a valid blog can be added ', async () => {
@@ -377,14 +347,14 @@ describe('blogilista tests', () => {
         .expect(201)
         .expect('Content-Type', /application\/json/)
     
-      const response = await api
-        .get('/api/blogs')
+      const dbStateAfter = await blogsInDb()
     
-      const titles = response.body.map(r => r.title)
+      const titles = dbStateAfter.map(r => r.title)
     
-      expect(response.body.length).toBe(testBlogs.length + 1)
+      expect(dbStateAfter.length).toBe(testBlogs.length + 1)
       expect(titles).toContain('To Serve Man, with Software')
     })
+
     //part 4.10
     test('a blog with no likes can be added ', async () => {
       const newBlog = {
@@ -399,13 +369,12 @@ describe('blogilista tests', () => {
         .expect(201)
         .expect('Content-Type', /application\/json/)
     
-      const response = await api
-        .get('/api/blogs')
+      const dbStateAfter = await blogsInDb()
     
-      const titles = response.body.map(r => r.title)
-      const likes = response.body.map(r => r.likes)
+      const titles = dbStateAfter.map(r => r.title)
+      const likes = dbStateAfter.map(r => r.likes)
     
-      expect(response.body.length).toBe(testBlogs.length + 2)
+      expect(dbStateAfter.length).toBe(testBlogs.length + 2)
       expect(titles).toContain('No added likes blog')
       expect(likes).toContain(0)
     })
@@ -422,21 +391,18 @@ describe('blogilista tests', () => {
         .expect(400)
         .expect('Content-Type', /application\/json/)
     
-      const response = await api
-        .get('/api/blogs')
+      const dbStateAfter = await blogsInDb()
     
-      const authors = response.body.map(r => r.author)
+      const authors = dbStateAfter.map(r => r.author)
     
-      expect(response.body.length).toBe(testBlogs.length + 2)
+      expect(dbStateAfter.length).toBe(testBlogs.length + 2)
       expect(authors).not.toContain('Author no url and title')
+
     })
-
-
   })
 
   afterAll(() => {
     server.close()
+
   })
-
-
 })
