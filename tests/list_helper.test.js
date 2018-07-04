@@ -3,11 +3,12 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Blog = require('../models/blog')
-const {testBlogs, blogsInDb, initializeDb,postNoteToDb} = require('./test_helper')
+const User = require('../models/user')
+const {testBlogs, blogsInDb, initializeDb,postNoteToDb,usersInDb} = require('./test_helper')
 
 
 //tests for 4.3-4.7
-describe.skip('list helpers', () => {
+describe.skip('list helpers, tests for 4.3-4.7', () => {
 
   test('dummy is called', () => {
     const blogs = []
@@ -294,7 +295,7 @@ describe.skip('list helpers', () => {
 
 
 //test for parts 4.8-4.11
-describe('blogilista tests', () => {
+describe('blogilista tests, for parts 4.8-4.11', () => {
   //part 4.8
   describe('blogilista api/blogs GET tests', () => {
     beforeAll(async () => {
@@ -328,7 +329,7 @@ describe('blogilista tests', () => {
 
   //part 4.9
 
-  describe('blogilista api/blogs POST tests', () => {
+  describe('blogilista api/blogs POST tests, part 4.9', () => {
     beforeAll(async () => {
       await initializeDb()
     })
@@ -352,7 +353,7 @@ describe('blogilista tests', () => {
     })
 
     //part 4.10
-    test('a blog with no likes can be added ', async () => {
+    test('a blog with no likes can be added,part 4.10 ', async () => {
       const newBlog2 = {
         title: 'No added likes blog',
         author: 'Jeff Atwood.',
@@ -388,6 +389,108 @@ describe('blogilista tests', () => {
 
     })
   })
+
+
+
+  describe.only('User addition test into db, part 4.16', async () => {
+    beforeAll(async () => {
+      await User.remove({})
+      const user = new User({ username: 'user1', name : 'name1',adult: false, password: 'password1' })
+      await user.save()
+    })
+  
+    test('POST /api/users succeeds with a new unique username', async () => {
+      const usersBeforeOperation = await usersInDb()
+  
+      const newUser = {
+        username: 'user2',
+        name: 'name two',
+        adult:true,
+        password: 'password2'
+      }
+  
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+  
+      const usersAfterOperation = await usersInDb()
+      expect(usersAfterOperation.length).toBe(usersBeforeOperation.length+1)
+      const usernames = usersAfterOperation.map(u=>u.username)
+      expect(usernames).toContain(newUser.username)
+    })
+
+    test('POST /api/users fails with non unique username', async () => {
+      const usersBeforeOperation = await usersInDb()
+  
+      const newUser = {
+        username: 'user2',
+        name: 'name three',
+        adult:true,
+        password: 'password3'
+      }
+  
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+  
+      const usersAfterOperation = await usersInDb()
+      expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)
+    })
+
+    test('POST /api/users fails with password shorter than 3 characters', async () => {
+      const usersBeforeOperation = await usersInDb()
+  
+      const newUser = {
+        username: 'user3',
+        name: 'name four',
+        adult:true,
+        password: 'pa'
+      }
+  
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+  
+      const usersAfterOperation = await usersInDb()
+      expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)
+    })
+
+    test('POST /api/users if adult value is not defined it is set to true', async () => {
+      const usersBeforeOperation = await usersInDb()
+  
+      const newUser = {
+        username: 'user4',
+        name: 'name five',
+        password: 'password4'
+      }
+  
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+  
+      const usersAfterOperation = await usersInDb()
+      expect(usersAfterOperation.length).toBe(usersBeforeOperation.length + 1)
+      const addedUser = await User.find( { username: newUser.username } )
+      expect(addedUser[0].username).toBe(newUser.username)
+      expect(addedUser[0].adult).toBe(true)
+    })
+
+
+  })
+
+
+
+
+
+
 
   afterAll(() => {
     server.close()

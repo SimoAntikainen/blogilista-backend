@@ -1,4 +1,6 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
+
 
 const testBlogs = [
   {
@@ -41,8 +43,13 @@ const postNoteToDb = async (api, newBlog, statusCode, resType) => {
     .expect('Content-Type', resType)
 }
 
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users
+}
+
 
 
 module.exports = {
-  testBlogs,blogsInDb,initializeDb,postNoteToDb
+  testBlogs,blogsInDb,initializeDb,postNoteToDb, usersInDb
 }
