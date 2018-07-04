@@ -434,7 +434,7 @@ describe('blogilista tests, for parts 4.8-4.11', () => {
       await api
         .post('/api/users')
         .send(newUser)
-        .expect(400)
+        .expect(422)
         .expect('Content-Type', /application\/json/)
   
       const usersAfterOperation = await usersInDb()
@@ -454,7 +454,7 @@ describe('blogilista tests, for parts 4.8-4.11', () => {
       await api
         .post('/api/users')
         .send(newUser)
-        .expect(400)
+        .expect(422)
         .expect('Content-Type', /application\/json/)
   
       const usersAfterOperation = await usersInDb()

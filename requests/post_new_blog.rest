@@ -2,8 +2,9 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title" : "asds",
+  "title" : "BBB",
   "author" : "Best blogger",
   "url" : "https://medium.com/",
-  "likes" : 1337
+  "likes" : 1337,
+  "userId" : "5b3cea2b10945133e0131b36"
 }

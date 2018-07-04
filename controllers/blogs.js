@@ -1,7 +1,8 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
-const formatBlog = (blog) => {
+/**const formatBlog = (blog) => {
   return {
     id: blog._id,
     title: blog.title,
@@ -9,11 +10,11 @@ const formatBlog = (blog) => {
     url: blog.url,
     likes: blog.likes
   }
-}
+}**/
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({})
-  response.json(blogs.map(formatBlog))
+  response.json(blogs.map(Blog.format))
 })
 
 blogsRouter.post('/', async (request,response) => {
@@ -27,10 +28,22 @@ blogsRouter.post('/', async (request,response) => {
       body['likes'] = 0
     }
 
-    const blog = new Blog(body)
+    const user = await User.findById(body.userId)
+    console.log("user id", user.id)
+
+    const blog = new Blog({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes,
+      user : user.id
+    })
 
     const savedBlog = await blog.save()
-    const formattedBlog = formatBlog(savedBlog)
+    user.blogs = user.blogs.concat(savedBlog.id)
+    await user.save()
+
+    const formattedBlog = Blog.format(savedBlog)
     response.status(201).json(formattedBlog)
 
 
@@ -63,7 +76,7 @@ blogsRouter.put('/:id', async (request, response) => {
 
   try {
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-    response.json(formatBlog(updatedBlog))
+    response.json(Blog.format(updatedBlog))
 
   } catch(exception) {
     console.log(exception)
