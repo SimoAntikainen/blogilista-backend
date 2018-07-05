@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1cGVyIHVzZXIiLCJpZCI6IjViM2U1NjVhNTUyOGMyMDFkMDRhYTBjOSIsImlhdCI6MTUzMDgxNTYxMH0.Th5KVaNb_m-QUGR7zqNBVPTBIdW7atRCnSYqzWBwaVA
 
 {
-  "title" : "new blog 2",
+  "title" : "new blog 3",
   "author" : "Best blogger",
   "url" : "https://medium.com/",
   "likes" : 1234,
