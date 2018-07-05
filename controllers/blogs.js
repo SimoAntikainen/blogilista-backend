@@ -87,7 +87,7 @@ blogsRouter.delete('/:id', async (request, response) => {
     //console.log("token id", decodedToken.id)
 
     if(blog.user.toString() !== decodedToken.id) {
-      return response.status(401).json({ error: 'unauthorized resource' })  
+      return response.status(401).json({ error: 'unauthorized resource for deletion' })  
     }
 
 
