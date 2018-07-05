@@ -1,10 +1,11 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1cGVyIHVzZXIiLCJpZCI6IjViM2U1NjVhNTUyOGMyMDFkMDRhYTBjOSIsImlhdCI6MTUzMDgxNTYxMH0.Th5KVaNb_m-QUGR7zqNBVPTBIdW7atRCnSYqzWBwaVA
 
 {
-  "title" : "BBB",
+  "title" : "new blog 2",
   "author" : "Best blogger",
   "url" : "https://medium.com/",
-  "likes" : 1337,
+  "likes" : 1234,
   "userId" : "5b3cea2b10945133e0131b36"
 }
