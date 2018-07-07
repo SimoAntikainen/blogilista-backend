@@ -7,13 +7,13 @@ usersRouter.post('/', async (request, response) => {
     const body = request.body
 
     if(body.password.length < 3) {
-      return response.status(422).json({ error: 'password less than 3 characters long' })
+      return response.status(400).json({ error: 'password less than 3 characters long' })
 
     }
 
     const existingUser = await User.find( { username: body.username } )
     if (existingUser.length>0) {
-      return response.status(422).json({ error: 'username must be unique' })
+      return response.status(400).json({ error: 'username must be unique' })
     }
 
     const saltRounds = 10
@@ -28,7 +28,7 @@ usersRouter.post('/', async (request, response) => {
 
     const savedUser = await user.save()
 
-    response.json(savedUser)
+    response.status(201).json(savedUser)
   } catch (exception) {
     console.log(exception)
     response.status(500).json({ error: 'something went wrong...' })
