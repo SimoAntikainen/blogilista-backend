@@ -482,15 +482,7 @@ describe('blogilista tests, for parts 4.8-4.11', () => {
       expect(addedUser[0].username).toBe(newUser.username)
       expect(addedUser[0].adult).toBe(true)
     })
-
-
   })
-
-
-
-
-
-
 
   afterAll(() => {
     server.close()
