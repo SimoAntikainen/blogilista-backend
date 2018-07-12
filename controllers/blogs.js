@@ -86,14 +86,17 @@ blogsRouter.delete('/:id', async (request, response) => {
 
     const blog = await Blog.findById(request.params.id)
 
-    //console.log("USER ID", blog.user.toString())
-    //console.log("TOKEN ID", decodedToken.id)
+    console.log("USER ID", blog.user.toString())
+    console.log("TOKEN ID", decodedToken.id)
+    
+    if(blog.user.toString() === undefined) {
+      await Blog.findByIdAndRemove(request.params.id)
+      return response.status(204).end()
+    }
 
     if(blog.user.toString() !== decodedToken.id) {
       return response.status(401).json({ error: 'unauthorized resource for deletion' })  
     }
-
-
 
     await Blog.findByIdAndRemove(request.params.id)
     response.status(204).end()
